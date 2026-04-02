@@ -30,7 +30,7 @@ PBK's Repository
     
     Web Server -> nginx:1.27.0
 
-    Linux Server -> 
+    Linux Server -> Ubuntu:22.04
 
 -->
 
