@@ -16,6 +16,9 @@ PBK's Repository
     Git과 GitHub의 역할 차이(로컬 버전관리 vs 원격 협업 플랫폼)를 설명할 수 있다.
 
 2. 실행 환경
+    docker : MAC
+    git : MAC
+    linux 명령어 : Ubuntu
 
 3. 수행 항목 체크리스트(터미널/권한/Docker/Dockerfile/포트/볼륨/Git//GitHub)
 

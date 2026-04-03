@@ -11,7 +11,7 @@ COPY default.conf /etc/nginx/conf.d/default.conf
 COPY ./html /usr/share/nginx/html
 
 # 포트 지정(80 -> html 443 -> htmls)
-EXPOSE 80 443
+EXPOSE 80
 
 # 컨테이너 시작 시 기본으로 실행할 명령 지정 * daemon off -> on이 기본 설정인데, 이 경우 실행 후 즉시 종료됨
 # -g의 의미 global의 g, nginx의 전체 동작에 영향을 미치는 최상위 설정
