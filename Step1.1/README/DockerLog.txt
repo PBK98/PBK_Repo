@@ -161,17 +161,17 @@ drwxr-xr-x    1 root     root             0 Apr  3 09:39 .
 drwxr-xr-x    1 root     root            20 Apr  3 11:06 ..
 
 *******************************************
-docker exec -it ubuntu-server bash -c "echo 'test data' > /data/test.txt"
+docker exec -it ubuntu-server bash -c "echo 'test data' > /data/test.txt" (ubuntu-server에 test.txt 파일 생성)
 *******************************************
 
 *******************************************
-docker exec -it ubuntu-server cat /data/test.txt
+docker exec -it ubuntu-server cat /data/test.txt (출력하여 확인)
 *******************************************
 
 test data
 
 *******************************************
-docker-compose stop
+docker-compose stop (컨테이너 일괄 종료)
 *******************************************
 
 [+] Stopping 2/2
@@ -179,7 +179,7 @@ docker-compose stop
  ✔ Container ubuntu-server  Stopped   
                                                                                                                               10.2s 
 *******************************************
-docker-compose start 
+docker-compose start (컨테이너 일괄 실행)
 *******************************************
 
 [+] Running 2/2
@@ -187,7 +187,7 @@ docker-compose start
  ✔ Container nginx-server   Started    
                                                                                                                              0.2s 
 *******************************************
-docker exec -it ubuntu-server cat /data/test.txt      
+docker exec -it ubuntu-server cat /data/test.txt (컨테이너 재실행 시에도 데이터가 남아있는지 확인)
 *******************************************
 
 test data
