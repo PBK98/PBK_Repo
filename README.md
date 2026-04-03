@@ -33,9 +33,3 @@ PBK's Repository
     Linux Server -> Ubuntu:22.04
 
 -->
-
-<!-- 터미널 조작 로그
-
-
-
--->
