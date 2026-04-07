@@ -10,7 +10,7 @@ services:
     networks:
       - my-network
     volumes:
-      - ubuntu-volume:/data
+      - /Users/bumkyu84259392/PBK_Repo/Step1.1/Volumes/UbuntuVolume/data
 
   nginx-server:
     build:
@@ -24,7 +24,7 @@ services:
       - my-network
     volumes:
       - ./WebServer/nginx.conf:/etc/nginx/nginx.conf:ro
-      - nginx-volume:/var/log/nginx
+      - /Users/bumkyu84259392/PBK_Repo/Step1.1/Volumes/NginxVolume/data
     depends_on:
       - ubuntu-server
 
