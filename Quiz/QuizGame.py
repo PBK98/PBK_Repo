@@ -1,11 +1,13 @@
 # QuizGame.py
 
-import json
-from Quiz import Quiz
+import json #json의 표준 라이브러리를 가져와서 json의 기능을 사용하겠다.
+from Quiz import Quiz # Quiz.py 를 가져와서 그 안의 Quiz 클래스를 사용하겠다.
 
 # --- 데이터 로드/저장 함수 (이전과 동일) ---
+# load_data(filename) 에서 filename은 이 함수를 사용해서 불러올 파일명을 담을 변수이고, load_data는 함수의 이름이다.
 def load_data(filename):
     try:
+        # json의 open 함수를 사용해서 filename에 담긴 파일을 읽기 모드('r')로 열고, encoding은 utf-8로 설정한다. 그리고 그 파일을 f라는 변수에 담는다.(as f)
         with open(filename, 'r', encoding='utf-8') as f:
             return json.load(f)
     except FileNotFoundError:
