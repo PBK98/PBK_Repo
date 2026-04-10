@@ -1,0 +1,37 @@
+services:
+  ubuntu-server:
+    build:
+      context: .
+      dockerfile: ./LinuxServer
+    image: pbk-ubuntu
+    container_name: ubuntu-server
+    stdin_open: true
+    tty: true
+    networks:
+      - my-network
+    volumes:
+      - /Users/bumkyu84259392/PBK_Repo/Step1.1/Volumes/UbuntuVolume/data
+
+  nginx-server:
+    build:
+      context: .
+      dockerfile: ./WebServer
+    image: pbk-nginx
+    container_name: nginx-server
+    ports:
+      - "80:80"
+    networks:
+      - my-network
+    volumes:
+      - ./WebServer/nginx.conf:/etc/nginx/nginx.conf:ro
+      - /Users/bumkyu84259392/PBK_Repo/Step1.1/Volumes/NginxVolume/data
+    depends_on:
+      - ubuntu-server
+
+volumes:
+  ubuntu-volume:
+  nginx-volume:
+
+networks:
+  my-network:
+    driver: bridge

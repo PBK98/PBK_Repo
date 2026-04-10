@@ -1,0 +1,108 @@
+Terminal Log
+
+1. 현재 위치 확인
+
+root@d2f238368808:/app# pwd
+/app
+
+2. 목록 확인(숨김 파일 포함)
+
+root@d2f238368808:/app# ls -a
+.  ..
+
++ 권한 포함
+
+root@d2f238368808:/app# ls -la
+total 0
+drwxr-xr-x 1 root root  0 Apr  3 09:46 .
+drwxr-xr-x 1 root root 20 Apr  3 10:18 ..
+
+3. 이동
+
+root@d2f238368808:/app# cd ..
+root@d2f238368808:/# ls
+app  bin  boot  data  dev  etc  home  lib  lib32  lib64  libx32  media  mnt  opt  proc  root  run  sbin  srv  sys  tmp  usr  var
+root@d2f238368808:/# cd app
+root@d2f238368808:/app# 
+
+4. 생성
+
+root@d2f238368808:/app# mkdir test
+root@d2f238368808:/app# ls
+test
+
+5. 복사
+
+root@d2f238368808:/app# cp test.txt ./test
+root@d2f238368808:/app# ls
+test  test.txt
+root@d2f238368808:/app# cd test
+root@d2f238368808:/app/test# ls
+test.txt
+
+
+6. 이동/이름변경
+
+root@d2f238368808:/app/test# mv test.txt test1.txt
+root@d2f238368808:/app/test# ls
+test1.txt
+
+root@d2f238368808:/app/test# mv test1.txt ./..
+root@d2f238368808:/app/test# ls
+root@d2f238368808:/app/test# cd ..
+root@d2f238368808:/app# ls
+test  test.txt  test1.txt
+
+7. 삭제
+
+root@d2f238368808:/app# ls
+test  test.txt  test1.txt
+root@d2f238368808:/app# rmdir test
+root@d2f238368808:/app# rm test1.txt
+root@d2f238368808:/app# ls
+test.txt
+
+8. 파일 내용 확인
+
+root@d2f238368808:/app# cat test.txt
+root@d2f238368808:/app# vi test.txt * test 작성
+root@d2f238368808:/app# cat test.txt
+test
+
+9. 빈 파일 생성
+
+root@d2f238368808:/app# touch test.txt
+root@d2f238368808:/app# ls
+test  test.txt
+
+---------------------------------------------
+
+권한 실습 및 증거 기록
+
+1. 권한을 확인/변경하는 명령을 수행하고, 변경 전/후 비교를 기술 문서에 남긴다. * 최소 요구 : 파일 1개, 디렉토리 1개에 대한 권한 변경 실험을 수행한다.
+
+root@d2f238368808:/app# ls -la
+total 4
+drwxr-xr-x 1 root root 24 Apr  3 12:10 .
+drwxr-xr-x 1 root root 34 Apr  3 10:18 ..
+drwxr-xr-x 1 root root  0 Apr  3 12:10 test
+-rw-r--r-- 1 root root  5 Apr  3 12:08 test.txt
+
+root@d2f238368808:/app# chmod 777 test.txt    
+root@d2f238368808:/app# chmod 777 test
+root@d2f238368808:/app# ls -la
+total 4
+drwxr-xr-x 1 root root 24 Apr  3 12:10 .
+drwxr-xr-x 1 root root 34 Apr  3 10:18 ..
+drwxrwxrwx 1 root root  0 Apr  3 12:10 test
+-rwxrwxrwx 1 root root  5 Apr  3 12:08 test.txt
+
+root@d2f238368808:/app# chmod 655 test.txt
+root@d2f238368808:/app# chmod 755 test 
+root@d2f238368808:/app# chmod 655 test.txt
+root@d2f238368808:/app# ls -la
+total 4
+drwxr-xr-x 1 root root 24 Apr  3 12:10 .
+drwxr-xr-x 1 root root 34 Apr  3 10:18 ..
+drwxr-xr-x 1 root root  0 Apr  3 12:10 test
+-rw-r-xr-x 1 root root  5 Apr  3 12:08 test.txt

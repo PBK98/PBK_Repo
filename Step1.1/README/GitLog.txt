@@ -1,0 +1,34 @@
+Git/GitHub Log
+
+1. 사용자 이름 설정
+bumkyu84259392@c4r3s8 Step1.1 % git config --global user.name pbk98
+
+2. 이메일 설정
+bumkyu84259392@c4r3s8 Step1.1 % git config --global user.email bumkyu8425@naver.com
+
+3. 기본 브랜치 설정
+bumkyu84259392@c4r3s8 Step1.1 % git config --global init.defaultBranch main
+
+4. 설정 확인
+bumkyu84259392@c4r3s8 Step1.1 % git config --list
+credential.helper=osxkeychain
+user.name=pbk98
+user.email=bumkyu8425@naver.com
+init.defaultbranch=main
+core.repositoryformatversion=0
+core.filemode=true
+core.bare=false
+core.logallrefupdates=true
+core.ignorecase=true
+core.precomposeunicode=true
+submodule.active=.
+remote.origin.url=https://github.com/PBK98/PBK_Repo.git
+remote.origin.fetch=+refs/heads/*:refs/remotes/origin/*
+branch.main.remote=origin
+branch.main.merge=refs/heads/main
+:
+
+5. 연동 확인
+bumkyu84259392@c4r3s8 Step1.1 % git remote -v 
+origin  https://github.com/PBK98/PBK_Repo.git (fetch)
+origin  https://github.com/PBK98/PBK_Repo.git (push)
