@@ -21,6 +21,13 @@ def save_data(filename, data):
     with open(filename, 'w', encoding='utf-8') as f:
         json.dump(data, f, indent=4, ensure_ascii=False)
 
+# --- 사용자 정의 예외 클래스 ---
+class InvalidInputError(ValueError):
+    """숫자가 아닌 값을 입력했을 때 발생하는 예외"""
+    def __init__(self, message="잘못된 입력입니다. 숫자를 입력해주세요."):
+        self.message = message
+        super().__init__(self.message)
+
 # --- 메뉴 기능별 함수 ---
 class SolveQuiz:
     def start_quiz(self):
@@ -140,3 +147,57 @@ class RemoveQuiz:
         else:
             print("\n[!] 잘못된 번호입니다.")
             
+class AddUser:
+    def manage_user(self):
+        """7. 사용자 관리"""
+        while True:
+            user_data = load_data('user.json')
+            print(f"\n--- 사용자 관리 (현재: {user_data['username']}) ---")
+            print("1. 사용자 이름 변경")
+            print("2. 사용자 정보 초기화 (점수 포함)")
+            print("0. 메인 메뉴로 돌아가기")
+            
+            try:
+                choice = input("메뉴를 선택하세요: ")
+                if not choice.isdigit():
+                    raise InvalidInputError() # 우리가 만든 예외 활용!
+                
+                choice = int(choice)
+
+                if choice == 1:
+                    self._change_username(user_data)
+                elif choice == 2:
+                    self._reset_user_data(user_data)
+                elif choice == 0:
+                    print("메인 메뉴로 돌아갑니다.")
+                    break
+                else:
+                    print("[!] 메뉴에 없는 번호입니다.")
+
+            except InvalidInputError as e:
+                print(f"\n{e}")
+
+    def _change_username(self, user_data):
+        """사용자 이름 변경 (내부 함수)"""
+        new_username = input("새로운 사용자 이름을 입력하세요: ").strip()
+        
+        if new_username: # 입력값이 있으면
+            user_data['username'] = new_username
+            user_data['score'] = 0 # 사용자가 바뀌면 점수 초기화
+            user_data['solved_count'] = 0
+            save_data('user.json', user_data)
+            print(f"\n[+] 사용자가 '{new_username}'(으)로 변경되었습니다.")
+        else:
+            print("\n[!] 입력이 없어 변경되지 않았습니다.")
+
+    def _reset_user_data(self, user_data):
+        """사용자 정보 초기화 (내부 함수)"""
+        confirm = input("정말 모든 사용자 정보를 초기화하시겠습니까? (y/n): ").lower()
+        if confirm == 'y':
+            user_data['username'] = "Guest"
+            user_data['score'] = 0
+            user_data['solved_count'] = 0
+            save_data('user.json', user_data)
+            print("\n[+] 사용자 정보가 'Guest'로 초기화되었습니다.")
+        else:
+            print("\n취소되었습니다.")

@@ -6,6 +6,7 @@ viewquiz = QuizList() # QuizList 클래스의 인스턴스를 viewquiz이라는 
 checkscore = ShowScore() # ShowScore 클래스의 인스턴스를 checkscore이라는 변수에 담는다.
 addhint = AddHint() # AddHint 클래스의 인스턴스를 addhint이라는 변수에 담는다.
 removequiz = RemoveQuiz() # RemoveQuiz 클래스의 인스턴스를 removequiz이라는 변수에 담는다.
+adduser = AddUser()
 
 if __name__ == "__main__":
     while True:
@@ -16,6 +17,7 @@ if __name__ == "__main__":
         print("4. 점수 확인")
         print("5. 힌트 추가")
         print("6. 퀴즈 삭제")
+        print("7. 사용자 추가")
         print("0. 종료")
         choice = input("메뉴를 선택하세요: ")
 
@@ -31,6 +33,8 @@ if __name__ == "__main__":
             addhint.add_hint()
         elif choice == '6':
             removequiz.delete_quiz()
+        elif choice == '7':
+            adduser.manage_user()
         elif choice == '0':
             print("게임을 종료합니다.")
             break

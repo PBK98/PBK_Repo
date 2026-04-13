@@ -1,0 +1,34 @@
+# Quiz Branch 생성
+bumkyu84259392@c4r2s8 Quiz % git branch -c Quiz
+
+# branch 목록 확인
+bumkyu84259392@c4r2s8 Quiz % git branch
+  Quiz
+* main
+
+# Quiz branch로 전환
+bumkyu84259392@c4r2s8 Quiz % git switch Quiz
+M       Step1.2/Quiz/__pycache__/Quiz.cpython-312.pyc
+M       Step1.2/Quiz/__pycache__/QuizGame.cpython-312.pyc
+'Quiz' 브랜치로 전환합니다
+브랜치가 'origin/main'에 맞게 업데이트된 상태입니다. 
+
+-------------------------------------------------------------------------------
+
+# Quiz branch 를 main 브랜치와 합치기 (Merge)
+
+# main branch로 전환
+bumkyu84259392@c4r2s8 Quiz % git switch main    
+M       Step1.2/Quiz/__pycache__/Quiz.cpython-312.pyc
+M       Step1.2/Quiz/__pycache__/QuizGame.cpython-312.pyc
+M       Step1.2/README/GitLogs.txt
+'main' 브랜치로 전환합니다
+브랜치가 'origin/main'에 맞게 업데이트된 상태입니다.
+
+# Quiz branch를 merge
+bumkyu84259392@c4r2s8 Quiz % git merge Quiz
+이미 업데이트 상태입니다.
+
+# 합쳐진 branch의 내용을 push
+bumkyu84259392@c4r2s8 Quiz % git push origin main
+Everything up-to-date
