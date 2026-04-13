@@ -229,10 +229,14 @@ class SolveQuiz:
             # 사용자 입력 받기 (이전과 동일)
             try:
                 user_choice = int(input("번호를 입력하세요: ").strip())
-                user_answer = quiz['choices'][user_choice - 1]
-
-                if user_answer not in [1, 2, 3, 4]:
+                
+                # ✅ 사용자가 입력한 '숫자'가 범위 안에 있는지 먼저 확인합니다.
+                if not (1 <= user_choice <= 4):
+                    # 1~4 범위를 벗어나면 에러를 발생시킵니다.
                     raise ValueError
+                
+                # 범위를 통과했다면, 그 다음에 정답 텍스트를 가져옵니다.
+                user_answer = quiz['choices'][user_choice - 1]
 
             except ValueError:
                 raise InvalidInputError("정답은 1-4 사이의 숫자로 입력해야 합니다.")
