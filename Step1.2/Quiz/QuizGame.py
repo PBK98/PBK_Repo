@@ -1,5 +1,4 @@
 # QuizGame.py
-
 import json #json의 표준 라이브러리를 가져와서 json의 기능을 사용하겠다.
 from Quiz import Quiz # Quiz.py 를 가져와서 그 안의 Quiz 클래스를 사용하겠다.
 
@@ -22,215 +21,238 @@ def save_data(filename, data):
         json.dump(data, f, indent=4, ensure_ascii=False)
 
 # --- 사용자 정의 예외 클래스 ---
-class InvalidInputError(ValueError):
-    """숫자가 아닌 값을 입력했을 때 발생하는 예외"""
-    def __init__(self, message="잘못된 입력입니다. 숫자를 입력해주세요."):
-        self.message = message
-        super().__init__(self.message)
+class InvalidInputError(Exception):
+    """사용자 입력이 유효하지 않을 때 발생하는 예외"""
+    pass
 
 # --- 메뉴 기능별 함수 ---
 
+# QuizGame.py 파일
+
 class UserManager:
-    def user_manager(self):
-        """7. 사용자 관리 메뉴"""
-        while True:
-            # 최신 데이터를 항상 다시 불러옵니다.
-            state_data = load_data('state.json')
-            current_user = state_data.get('current_user', 'Guest') # .get()으로 안전하게 값 가져오기
+    # ✨ 1. __init__에서 데이터를 '한 번만' 불러와 self에 저장합니다.
+    def __init__(self, user_filepath='user.json'):
+        """
+        UserManager가 생성될 때 사용자 데이터를 불러와 self.users에 저장합니다.
+        현재 선택된 사용자인 self.current_user는 None으로 초기화합니다.
+        """
+        self.filepath = user_filepath
+        self.users = load_data(self.filepath) # user.json 데이터를 객체 안에 보관
+        self.current_user = None # 현재 사용자를 객체 안에 보관 (처음엔 없음)
 
-            print(f"\n--- 사용자 관리 (현재 사용자: {current_user}) ---")
-            self._list_users() # 메뉴를 보여주기 전에 항상 목록을 먼저 출력
-            
-            print("\n1. 사용자 추가")
-            print("2. 사용자 선택")
-            print("3. 사용자 삭제")
-            print("0. 메인 메뉴로 돌아가기")
+    # ✨ 2. 데이터를 파일에 저장하는 기능을 별도 메서드로 분리합니다.
+    def save_users(self):
+        """현재 self.users에 있는 데이터를 파일에 저장합니다."""
+        save_data(self.filepath, self.users)
 
-            try:
-                choice = input("메뉴를 선택하세요: ").strip()
-                if not choice.isdigit():
-                    raise InvalidInputError()
-                
-                choice = int(choice)
-
-                if choice == 1:
-                    self._add_user()
-                elif choice == 2:
-                    self._select_user()
-                elif choice == 3:
-                    self._delete_user()
-                elif choice == 0:
-                    print("메인 메뉴로 돌아갑니다.")
-                    break
-                else:
-                    print("\n[!] 메뉴에 없는 번호입니다.")
-            
-            except InvalidInputError as e:
-                print(f"\n{e}")
-
-    def select_user_for_game(self):
-        """퀴즈를 풀기 전, 플레이할 사용자를 선택하는 기능"""
-        print("\n--- 플레이할 사용자를 선택하세요 ---")
-        self._list_users() # 기존에 만들어둔 사용자 목록 보여주기 메서드 재사용!
-        
-        users_data = load_data('user.json')
-        if not users_data:
-            print("\n[!] 등록된 사용자가 없습니다. 'Guest'로 플레이합니다.")
-            # state.json의 current_user를 'Guest'로 확실히 해줍니다.
-            state_data = load_data('state.json')
-            state_data['current_user'] = "Guest"
-            save_data('state.json', state_data)
-            return True # Guest로 게임을 계속 진행
-
-        while True:
-            username_to_select = input("사용자 이름을 입력하세요 (취소하려면 엔터): ").strip()
-
-            if not username_to_select: # 그냥 엔터를 치면
-                print("사용자 선택을 취소하고 메인 메뉴로 돌아갑니다.")
-                return False # 게임 시작을 취소한다는 의미로 False 반환
-
-            if username_to_select in users_data:
-                state_data = load_data('state.json')
-                state_data['current_user'] = username_to_select
-                save_data('state.json', state_data)
-                print(f"\n[+] '{username_to_select}'님, 환영합니다! 퀴즈를 시작합니다.")
-                return True # 사용자를 성공적으로 선택했으니 True 반환
-            else:
-                print(f"\n[!] '{username_to_select}' 사용자를 찾을 수 없습니다. 다시 입력해주세요.")
-
+    # ✨ 3. 이제 메서드들은 self.users를 사용합니다. (파일을 매번 읽지 않음)
     def _list_users(self):
-        """현재 등록된 모든 사용자를 출력"""
-        users_data = load_data('user.json')
+        """현재 등록된 모든 사용자를 출력 (self.users 기반)"""
         print("\n[ 등록된 사용자 목록 ]")
-        if not users_data:
+        if not self.users:
             print("- 등록된 사용자가 없습니다.")
             return
-        # items()를 사용해 이름과 점수 정보를 함께 출력
-        for username, data in users_data.items():
-            print(f"- {username} (점수: {data.get('score', 0)})")
+        for username, data in self.users.items():
+            print(f"- {username}")
 
     def _add_user(self):
-        """새로운 사용자를 추가"""
+        """새로운 사용자를 self.users에 추가하고 파일에 저장"""
         new_username = input("추가할 사용자 이름을 입력하세요: ").strip()
         if not new_username:
             print("\n[!] 사용자 이름은 공백일 수 없습니다.")
             return
 
-        users_data = load_data('user.json')
-        if new_username in users_data:
+        if new_username in self.users:
             print(f"\n[!] '{new_username}' 사용자는 이미 존재합니다.")
         else:
-            users_data[new_username] = {"score": 0, "solved_count": 0}
-            save_data('user.json', users_data)
+            self.users[new_username] = {"score": 0, "solved_count": 0}
+            self.save_users() # 변경사항을 파일에 저장
             print(f"\n[+] 사용자 '{new_username}'이(가) 추가되었습니다.")
 
-    def _select_user(self):
-        """플레이할 사용자를 선택"""
-        users_data = load_data('user.json')
-        username_to_select = input("선택할 사용자 이름을 입력하세요: ").strip()
+    # ✨ 4. select_user_for_game이 self.current_user를 직접 설정합니다.
+    def select_user_for_game(self):
+        """퀴즈를 풀 사용자를 선택하고, self.current_user에 저장합니다."""
+        self._list_users()
+        username = input("사용자 이름을 입력하세요 (취소하려면 엔터): ").strip()
 
-        if username_to_select in users_data:
-            state_data = load_data('state.json')
-            state_data['current_user'] = username_to_select
-            save_data('state.json', state_data)
-            print(f"\n[+] 현재 사용자가 '{username_to_select}'(으)로 변경되었습니다.")
+        if not username:
+            print("사용자 선택을 취소했습니다.")
+            self.current_user = None # 취소 시 초기화
+            return False
+
+        if username in self.users:
+            self.current_user = username  # ✨ state.json 대신 여기에 바로 저장!
+            print(f"\n[+] '{self.current_user}'님, 환영합니다! 퀴즈를 시작합니다.")
+            return True
         else:
-            print(f"\n[!] '{username_to_select}' 사용자를 찾을 수 없습니다.")
+            print(f"\n[!] '{username}' 사용자를 찾을 수 없습니다.")
+            self.current_user = None
+            return False
+
+    # ✨ 5. SolveQuiz에서 필요로 하는 메서드들을 추가합니다.
+    def update_score(self, score_to_add):
+        """현재 사용자의 점수와 푼 횟수를 업데이트합니다."""
+        if self.current_user and self.current_user in self.users:
+            self.users[self.current_user]['score'] += score_to_add
+            self.users[self.current_user]['solved_count'] += 1
+            self.save_users() # 점수 변경 후 파일 저장
+            print(f"'{self.current_user}'님의 정보가 업데이트되었습니다.")
+        else:
+            print("[!] 점수를 업데이트할 사용자가 선택되지 않았습니다.")
+
+    def get_current_user_data(self):
+        """현재 선택된 사용자의 전체 데이터를 반환합니다."""
+        if self.current_user:
+            return self.users.get(self.current_user)
+        return None
+
+
+
+    def _rename_user(self):
+        """사용자 이름을 변경합니다."""
+        old_username = input("이름을 변경할 사용자 이름을 입력하세요: ").strip()
+
+        if old_username not in self.users:
+            print(f"\n[!] '{old_username}' 사용자를 찾을 수 없습니다.")
+            return
+
+        new_username = input("새 사용자 이름을 입력하세요: ").strip()
+        if not new_username:
+            print("\n[!] 새 사용자 이름은 공백일 수 없습니다.")
+            return
+        if new_username in self.users:
+            print(f"\n[!] '{new_username}' 이름은 이미 사용 중입니다.")
+            return
+
+        # 딕셔너리에서 키 이름을 변경하는 가장 일반적인 방법입니다.
+        # 기존 데이터를 꺼내서(pop) 새 이름으로 저장합니다.
+        self.users[new_username] = self.users.pop(old_username)
+        
+        # 만약 현재 로그인된 사용자의 이름을 바꾼 경우, self.current_user도 업데이트 해줍니다.
+        if self.current_user == old_username:
+            self.current_user = new_username
+            print(f"[!] 현재 사용자의 이름이 '{new_username}'(으)로 변경되었습니다.")
+
+        self.save_users() # 변경사항을 파일에 저장
+        print(f"\n[+] '{old_username}' -> '{new_username}'(으)로 이름이 변경되었습니다.")
 
     def _delete_user(self):
-        """사용자를 삭제"""
-        users_data = load_data('user.json')
+        """사용자를 삭제합니다."""
         username_to_delete = input("삭제할 사용자 이름을 입력하세요: ").strip()
 
-        if username_to_delete not in users_data:
+        if username_to_delete not in self.users:
             print(f"\n[!] '{username_to_delete}' 사용자를 찾을 수 없습니다.")
             return
-        
-        if username_to_delete == "Guest":
-            print("\n[!] 'Guest' 사용자는 삭제할 수 없습니다.")
-            return
 
+        # 실수를 방지하기 위해 한 번 더 확인합니다.
         confirm = input(f"정말 '{username_to_delete}' 사용자를 삭제하시겠습니까? (y/n): ").lower()
         if confirm == 'y':
-            # 삭제하려는 유저가 현재 유저라면, Guest로 변경
-            state_data = load_data('state.json')
-            if state_data['current_user'] == username_to_delete:
-                state_data['current_user'] = "Guest"
-                save_data('state.json', state_data)
-                print("[!] 현재 사용자가 삭제되어 'Guest'로 변경됩니다.")
+            del self.users[username_to_delete]
 
-            del users_data[username_to_delete]
-            save_data('user.json', users_data)
+            # 만약 현재 사용자를 삭제했다면, 선택되지 않은 상태로 되돌립니다.
+            if self.current_user == username_to_delete:
+                self.current_user = None
+                print("[!] 현재 사용자가 삭제되어 로그아웃 처리됩니다.")
+
+            self.save_users() # 변경사항을 파일에 저장
             print(f"\n[+] '{username_to_delete}' 사용자가 삭제되었습니다.")
         else:
             print("\n삭제가 취소되었습니다.")
 
+    # ✨ 이 부분이 바로 학생분이 원하셨던 '관리 메뉴' 기능입니다!
+    def manage_users(self):
+        """사용자 관리 메뉴를 표시하고 관련 기능을 실행합니다."""
+        while True:
+            # 요청하신 대로, 메뉴를 보여주기 전에 항상 목록을 먼저 출력합니다.
+            self._list_users() 
+            
+            print("\n--- 사용자 관리 메뉴 ---")
+            print("  1. 사용자 추가")
+            print("  2. 사용자 이름 변경")
+            print("  3. 사용자 삭제")
+            print("  4. 메인 메뉴로 돌아가기")
+            
+            choice = input(">> 선택: ").strip()
+
+            if choice == '1':
+                self._add_user()
+            elif choice == '2':
+                self._rename_user()
+            elif choice == '3':
+                self._delete_user()
+            elif choice == '4':
+                print("\n메인 메뉴로 돌아갑니다.")
+                break # while 루프를 종료하고 메서드를 빠져나갑니다.
+            else:
+                print("\n[!] 잘못된 입력입니다. 1~4 사이의 숫자를 입력해주세요.")
+
 class SolveQuiz:
     def __init__(self, user_manager):
-        """
-        SolveGame 클래스를 초기화합니다.
-        UserManager 인스턴스를 받아 사용자 선택 기능을 사용합니다.
-        """
-        self.user_manager = user_manager # UserManager 인스턴스를 self.user_manager에 저장
-
-    # QuizGame.py 파일의 SolveQuiz 클래스 안에 있는 메서드입니다.
+        self.user_manager = user_manager
 
     def solve_quiz(self):
-        """1. 퀴즈 풀기 (state.json 기반, 객관식 로직 유지)"""
+        """1. 퀴즈 풀기 (힌트 기능 및 점수 차감 추가)"""
         if not self.user_manager.select_user_for_game():
             return
 
-        # --- ✨ 다시 이 부분을 추가합니다! ---
-        # 1. state.json 파일에서 현재 게임 상태(사용자, 문제)를 불러옵니다.
         try:
             state_data = load_data('state.json')
             questions = state_data['questions']
         except (FileNotFoundError, KeyError):
-            # state.json이 없거나, 파일 안에 'questions' 키가 없을 경우
-            print("\n[!] 게임 상태를 불러올 수 없습니다. 퀴즈를 시작할 수 없습니다.")
+            print("\n[!] 퀴즈 데이터를 불러올 수 없습니다.")
             return
 
         if not questions:
             print("\n[!] 풀 수 있는 퀴즈가 없습니다. 먼저 퀴즈를 추가해주세요.")
             return
 
-        current_user = self.user_manager.current_user
-        print(f"\n--- {current_user}님, 퀴즈를 시작합니다! ---")
+        current_user_name = self.user_manager.current_user
+        print(f"\n--- {current_user_name}님, 퀴즈를 시작합니다! ---")
         
         score = 0
-        # --- ✨ 순회 대상을 self.quizzes에서 questions로 변경합니다. ---
         for quiz in questions:
-            # 이 아래의 객관식 로직은 우리가 방금 만든 것을 그대로 사용합니다.
+            # ✨ 1. 각 문제마다 얻을 수 있는 점수를 10점으로 초기화합니다.
+            points_for_this_question = 10
+
             print(f"\n문제: {quiz['question']}")
-
-            # 1. 선택지 보여주기
             for i, choice in enumerate(quiz['choices']):
-                print(f"  {i+1}. {choice}")
+                print(f"{choice}")
 
-            # 2. 사용자 입력 받기 (숫자로)
+            # ✨ 2. 힌트가 있는지 확인하고, 사용자에게 사용 여부를 묻습니다.
+            # .get('hint')는 힌트가 없거나(key 자체가 없음) 비어있을 때(value가 "") None이나 빈 문자열을 반환합니다.
+            if quiz.get('hint'):
+                use_hint = input("힌트를 보시겠습니까? (y/n) (사용 시 5점 차감): ").strip().lower()
+                if use_hint == 'y':
+                    print(f"💡 힌트: {quiz['hint']}")
+                    points_for_this_question -= 5 # 힌트를 사용하면 점수를 5점 차감합니다.
+
+            # 사용자 입력 받기 (이전과 동일)
             try:
                 user_choice = int(input("번호를 입력하세요: ").strip())
                 user_answer = quiz['choices'][user_choice - 1]
-            except (ValueError, IndexError):
-                print("잘못된 입력입니다. 오답으로 처리됩니다.")
-                user_answer = ""
 
-            # 3. 정답 확인하기
+                if user_answer not in [1, 2, 3, 4]:
+                    raise ValueError
+
+            except ValueError:
+                raise InvalidInputError("정답은 1-4 사이의 숫자로 입력해야 합니다.")
+
+            # ✨ 3. 정답 확인 시, 고정된 10점이 아닌 '이번 문제의 점수'를 더합니다.
             if user_answer == quiz['answer']:
-                print("정답입니다!")
-                score += 10
+                print(f"정답입니다! +{points_for_this_question}점")
+                score += points_for_this_question # 힌트를 썼다면 5점, 안 썼다면 10점이 더해집니다.
             else:
-                print(f"오답입니다. 정답은 '{quiz['answer']}' 입니다.")
+                print(f"오답입니다.")
         
-        # 점수 업데이트
-        self.user_manager.update_score(score)
-        user_profile = self.user_manager.get_current_user_data()
-
+        # 점수 업데이트 및 결과 출력 (이전과 동일)
         print(f"\n--- 퀴즈 종료! ---")
-        print(f"{current_user}님의 이번 게임 점수는 {score}점입니다.")
-        print(f"총 점수: {user_profile['score']}점")
+        print(f"{current_user_name}님의 이번 게임 점수는 {score}점입니다.")
+        
+        self.user_manager.update_score(score)
 
-
+        user_profile = self.user_manager.get_current_user_data()
+        if user_profile:
+            print(f"총 점수: {user_profile['score']}점")
 class AddQuiz:
     def __init__(self):
         pass
