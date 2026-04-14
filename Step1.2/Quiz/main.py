@@ -22,32 +22,35 @@ if __name__ == "__main__":
         print("6. 퀴즈 삭제")
         print("7. 사용자 관리")
         print("0. 종료")
-        choice = input("메뉴를 선택하세요: ")
+
 
         try:
-            if choice == '1':
+
+            choice = int(input("메뉴를 선택하세요: "))
+
+            if choice == 1:
                 quizsolve.solve_quiz()
-            elif choice == '2':
+            elif choice == 2:
                 addquiz.add_quiz()
-            elif choice == '3':
+            elif choice == 3:
                 viewquiz.view_quizzes()
-            elif choice == '4':
+            elif choice == 4:
                 checkscore.check_score()
-            elif choice == '5':
+            elif choice == 5:
                 addhint.add_hint()
-            elif choice == '6':
+            elif choice == 6:
                 removequiz.delete_quiz()
-            elif choice == '7':
+            elif choice == 7:
                 manageuser.manage_users()
-            elif choice == '0':
+            elif choice == 0:
                 print("게임을 종료합니다.")
                 break
             else:
-                print("\n[!] 잘못된 입력입니다. 다시 선택해주세요.")
+              print("\n[!] 잘못된 입력입니다. 다시 선택해주세요.")
              # ✨ InvalidInputError를 잡아서 메시지를 출력합니다.
-        except InvalidInputError as e:
-            print(f"\n[!] {e}") # e에 우리가 담아 보낸 메시지가 들어있습니다.
-            print("메뉴로 돌아갑니다.")
+        
+        except ValueError:
+            print("\n[!] 숫자로 된 메뉴 번호를 입력해주세요.")
 
         # ✨ KeyboardInterrupt (Ctrl+C)를 별도로 처리합니다.
         except KeyboardInterrupt:

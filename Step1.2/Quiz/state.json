@@ -3,7 +3,7 @@
     "current_user": "",
     "questions": [
         {
-            "question": "1",
+            "question": "Codyssey 퍼실테이터 닉네임 중 아닌것은?",
             "choices": [
                 "1. 스톰",
                 "2. 써지",
@@ -11,10 +11,10 @@
                 "4. 포그"
             ],
             "answer": "3. 실버",
-            "hint": "자연재해"
+            "hint": ""
         },
         {
-            "question": "2",
+            "question": "Codyssey 체류 가능시간은?",
             "choices": [
                 "1. 24시간",
                 "2. am 07:00 ~ pm 06:30",
@@ -25,7 +25,7 @@
             "hint": ""
         },
         {
-            "question": "3",
+            "question": "Codyssey 도메인 주소는?",
             "choices": [
                 "1. Codyssey.net",
                 "2. Codyssey.com",
@@ -36,7 +36,7 @@
             "hint": ""
         },
         {
-            "question": "현재 루키마리너가 사용할 수 없는 층은 몇층일까요?",
+            "question": "현재 루키마리너가 사용할 수 없는 층은?",
             "choices": [
                 "1. 1층",
                 "2. 2층",

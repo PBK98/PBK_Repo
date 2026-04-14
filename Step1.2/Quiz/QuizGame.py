@@ -20,11 +20,6 @@ def save_data(filename, data):
     with open(filename, 'w', encoding='utf-8') as f:
         json.dump(data, f, indent=4, ensure_ascii=False)
 
-# --- 사용자 정의 예외 클래스 ---
-class InvalidInputError(Exception):
-    """사용자 입력이 유효하지 않을 때 발생하는 예외"""
-    pass
-
 # --- 메뉴 기능별 함수 ---
 
 # QuizGame.py 파일
