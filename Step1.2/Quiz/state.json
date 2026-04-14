@@ -1,0 +1,50 @@
+{
+    "description": "",
+    "current_user": "",
+    "questions": [
+        {
+            "question": "1",
+            "choices": [
+                "1. 스톰",
+                "2. 써지",
+                "3. 실버",
+                "4. 포그"
+            ],
+            "answer": "3. 실버",
+            "hint": "자연재해"
+        },
+        {
+            "question": "2",
+            "choices": [
+                "1. 24시간",
+                "2. am 07:00 ~ pm 06:30",
+                "3. am 06:00 ~ pm 04:00",
+                "4. pm 01:00 ~ am 00:00"
+            ],
+            "answer": "1. 24시간",
+            "hint": ""
+        },
+        {
+            "question": "3",
+            "choices": [
+                "1. Codyssey.net",
+                "2. Codyssey.com",
+                "3. Codyssey01.kr",
+                "4. Codyssey.kr"
+            ],
+            "answer": "4. Codyssey.kr",
+            "hint": ""
+        },
+        {
+            "question": "현재 루키마리너가 사용할 수 없는 층은 몇층일까요?",
+            "choices": [
+                "1. 1층",
+                "2. 2층",
+                "3. 4층",
+                "4. 5층"
+            ],
+            "answer": "2. 2층",
+            "hint": ""
+        }
+    ]
+}
